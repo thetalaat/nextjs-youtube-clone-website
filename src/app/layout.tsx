@@ -4,6 +4,12 @@ import "./globals.css";
 import Navigation from "@/components/shared/Navigation/Navigation";
 import CurrentUserProvider from "@/context/CurrentUserContext";
 import getCurrentUser from "@/actions/getCurrentUser";
+import CreateChannelModalProvider from "@/context/CreateChannelModalContext";
+import CreateChannelModal from "@/components/shared/Modals/CreateChannelModal";
+import { Toaster } from "react-hot-toast";
+import getCurrentChannel from "@/actions/getCurrentChannel";
+import CurrentChannelProvider from "@/context/CurrentChannelContext";
+import UploadVideoModalProvider from "@/context/UploadVideoModalContext";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -21,14 +27,23 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const currentUser = await getCurrentUser();
+  const currentChannel = await getCurrentChannel();
 
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <CurrentUserProvider user={currentUser}>
-          <Navigation />
-          <div className="pt-16">{children}</div>
-        </CurrentUserProvider>
+        <CreateChannelModalProvider>
+          <Toaster toastOptions={{ position: "bottom-left" }} />
+          <CreateChannelModal />
+          <CurrentUserProvider user={currentUser}>
+            <CurrentChannelProvider channel={currentChannel}>
+              <UploadVideoModalProvider>
+                <Navigation />
+                <div className="pt-16">{children}</div>
+              </UploadVideoModalProvider>
+            </CurrentChannelProvider>
+          </CurrentUserProvider>
+        </CreateChannelModalProvider>
       </body>
     </html>
   );
