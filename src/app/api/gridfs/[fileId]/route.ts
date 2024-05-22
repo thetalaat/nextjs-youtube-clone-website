@@ -55,3 +55,37 @@ export async function GET(req: NextRequest) {
     });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const { pathname } = parse(req.url!, true);
+  const fileId = pathname!.split("/").pop();
+
+  try {
+    if (typeof fileId !== "string") {
+      return new Response(null, {
+        status: 400,
+        statusText: "File ID must be a single string.",
+      });
+    }
+
+    await client.connect();
+    const db = client.db();
+    const bucket = new GridFSBucket(db);
+
+    // Delete the file
+    await bucket.delete(new ObjectId(fileId));
+
+    console.log(`File deleted successfully. | ${fileId}`);
+
+    return new Response(null, {
+      status: 204,
+      statusText: "File deleted successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(null, {
+      status: 500,
+      statusText: "An unknown error occurred",
+    });
+  }
+}

@@ -5,7 +5,7 @@ import MenuItem from "./MenuItem";
 
 import { PiUserSquareFill, PiYoutubeLogo, PiSignOut } from "react-icons/pi";
 import { useContext } from "react";
-import CreateChannelModal from "@/components/shared/Modals/CreateChannelModal";
+import CreateChannelModal from "@/components/shared/Modal/CreateChannelModal";
 import { CreateChannelModalContext } from "@/context/CreateChannelModalContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useRouter } from "next/navigation";

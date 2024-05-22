@@ -5,7 +5,7 @@ import Navigation from "@/components/shared/Navigation/Navigation";
 import CurrentUserProvider from "@/context/CurrentUserContext";
 import getCurrentUser from "@/actions/getCurrentUser";
 import CreateChannelModalProvider from "@/context/CreateChannelModalContext";
-import CreateChannelModal from "@/components/shared/Modals/CreateChannelModal";
+import CreateChannelModal from "@/components/shared/Modal/CreateChannelModal";
 import { Toaster } from "react-hot-toast";
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";

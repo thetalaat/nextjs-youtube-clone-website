@@ -106,6 +106,7 @@ const CreateChannelModal = () => {
         <Button
           type="secondary"
           onClick={() => {
+            axios.delete(imageSrc);
             createChannelModal?.onClose();
           }}
         >
