@@ -37,7 +37,7 @@ const LikeDislikeSection: React.FC<LikeDislikeSectionProps> = ({ video, channel 
           <SubscribeButton channelId={channel.id} />
         )}
       </div>
-      <LikeDislikeButton />
+      <LikeDislikeButton video={video} />
     </div>
   );
 };
