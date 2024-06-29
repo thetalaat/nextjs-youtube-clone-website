@@ -1,5 +1,7 @@
-import GetChannelById from "@/actions/getChannelById";
+import getChannelById from "@/actions/getChannelById";
+import getCommentsByVideoId from "@/actions/getCommentsByVideoId";
 import increaseVideoViewCount from "@/actions/increaseVideoViewCount";
+import CommentSection from "@/components/video/CommentSection/CommentSection";
 import Description from "@/components/video/Description";
 import LikeDislikeSection from "@/components/video/LikeSubscribeSection/LikeDislikeSection";
 import VideoPlayer from "@/components/video/VideoPlayer";
@@ -12,7 +14,8 @@ export default async function VideoPage({ params }: { params: VideoPageParams })
   const { videoId } = params;
 
   const video = await increaseVideoViewCount({ videoId });
-  const channel = await GetChannelById({ channelId: video?.channelId });
+  const channel = await getChannelById({ channelId: video?.channelId });
+  const comments = await getCommentsByVideoId({ videoId });
 
   return video && channel ? (
     <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">
@@ -21,6 +24,7 @@ export default async function VideoPage({ params }: { params: VideoPageParams })
         <h1 className="text-2xl font-medium break-all ">{video.title}</h1>
         <LikeDislikeSection video={video} channel={channel} />
         <Description video={video} />
+        <CommentSection comments={comments!} videoId={videoId!} />
       </div>
       <div className="w-full lg:w-1/4 flex flex-col"></div>
     </div>

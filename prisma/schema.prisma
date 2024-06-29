@@ -84,6 +84,7 @@ model Comment {
   id String @id @default(auto()) @map ("_id") @db.ObjectId
   videoId String @db.ObjectId @unique
   channelId String @db.ObjectId @unique
+  text String
   createdAt DateTime @default(now())
 
   channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)

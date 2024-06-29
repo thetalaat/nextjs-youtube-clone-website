@@ -5,9 +5,7 @@ interface GetVideosByChannelIdParams {
   channelId?: string;
 }
 
-export default async function GetVideosByChannelId(
-  params: GetVideosByChannelIdParams
-): Promise<Video[]> {
+export default async function getVideosByChannelId(params: GetVideosByChannelIdParams): Promise<Video[]> {
   try {
     const { channelId } = params;
 
