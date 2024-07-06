@@ -1,6 +1,58 @@
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import prisma from "@/vendor/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const searchQuery = request.nextUrl.searchParams.get("searchQuery");
+
+  if (!searchQuery) {
+    return NextResponse.error();
+  }
+
+  try {
+    const videos = await prisma.video.aggregateRaw({
+      pipeline: [
+        {
+          $search: {
+            index: "default",
+            text: {
+              query: searchQuery,
+              path: {
+                wildcard: "*",
+              },
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "Channel",
+            localField: "channelId",
+            foreignField: "_id",
+            as: "channel",
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: { $toString: "$_id" },
+            title: 1,
+            description: 1,
+            createdAt: { $dateToString: { date: "$createdAt" } },
+            thumbnailSrc: 1,
+            viewCount: 1,
+            channel: { $arrayElemAt: ["$channel", 0] },
+          },
+        },
+      ],
+    });
+    return NextResponse.json(videos);
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error(error);
+    // Provide a specific status code, such as 500 for Internal Server Error
+    return new Response(null, { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
   const currentChannel = await getCurrentChannel();
@@ -8,8 +60,7 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
 
-  const { id, title, description, videoSrc, thumbnailSrc } =
-    await request.json();
+  const { id, title, description, videoSrc, thumbnailSrc } = await request.json();
 
   const video = await prisma.video.create({
     data: {
